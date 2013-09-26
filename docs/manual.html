@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Nairaland Api Manual</title>
+<link rel="stylesheet" href="basic.css" type="text/css" />
+<style type="text/css" media="screen">
+@import "layout.css";
+.leftmenu ul {
+    margin: 0px;
+    padding: 0px 0px 10px 15px;
+    list-style-type: square;
+}
+h3 {
+    margin-bottom: 1em;
+}
+dl {
+    width: 80%;
+    margin-left: 10px;
+}
+dt {
+    font-weight: bold;
+    line-height: 1.4em;
+}
+pre {
+    margin: 15px;
+    padding: 10px;
+    border: 1px dashed #ccc;
+    color: #006;
+}
+</style>
+</head>
+
+<body>
+<div id="Header"><img id="IncutioLogo" src="logo.gif" width="222" height="48" alt="Logo: Nairaland Api" /><div style="clear:both"></div></div>
+<div id="TopNavBar">
+<a href="http://www.nairaland.com/">NAIRALAND HOME</a><span> | </span>
+<a href="http://code.google.com/p/nairaland-api/">SCRIPT</a><span> | </span>
+<a href="contact.txt">CONTACT</a>
+</div>
+<div id="MainContentCell">
+	<div id="MainBodyContent">
+
+<h2>Nairaland Api Manual</h2>
+
+<p><a href="http://code.google.com/p/nairaland-api/">Nairaland Api Home</a> | <a href="http://code.google.com/p/nairaland-api/source/browse/">Download Nairaland Api</a> | <a href="demo.php">Nairaland Api Demo</a></p>
+
+<p>Only methods that are intended to be called from outside the script are described. For details of internal methods, Use The Source :)</p>
+
+<dl>
+ <dt><code>Nairaland(string $username)</code></dt>
+ <dd>Constructor. Takes the username (for example, 'grandtheft'). $username is required and must contain a valid Nairaland username.</dd>
+ <dt><code>string postData(array $fields)</code></dt>
+ <dd>Arranges an array for a Post request. The returned string is in a key=value&key2=value2 format.</dd>
+ <dt><code>mixed login(string $password [, $redirect = '/'])</code></dt>
+ <dd>Login to a Nairaland account. $password is the password of the user. $redirect is optional, it is the url to redirect to after login, if it is not provided it would default to the homepage.<br>
+Returns the redirected page content (string) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>mixed editProfile(int $birthDay, int $birthMonth, int $birthYear, string $gender, string $personalText, string $signature, string $websiteTitle, string $websiteUrl, string $location, string $yim, string $twitter [, bool $removeAvatar = FALSE] [, string $avatar = FALSE])</code></dt>
+ <dd>Edits the profile of the currently logged in user. This method require a call first to <code>login</code> or <code>setCookie</code> before it is called. All parameters are required except $avatar and $removeAvatar which are optional. $avatar require a path to the image you want to set as avatar (e.g 'path/to/image.png'). If $removeAvatar is set to TRUE, the current user avatar will be removed. Returns a page content (string) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>mixed changeEmail(string $password, string $newEmail)</code></dt>
+ <dd>Edits the email of the currently logged in user. This method require a call first to <code>login</code> or <code>setCookie</code> before it is called. Returns a page content (string) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>mixed changePassword($oldPassword, $newPassword)</code></dt>
+ <dd>Changes the password of the currently logged in user. This method require a call first to <code>login</code> or <code>setCookie</code> before it is called. Returns a page content (string) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>mixed logout()</code></dt>
+ <dd>Logs out the currently logged in user. The session is destroyed and the cookie file deleted. This method require a call first to <code>login</code> or <code>setCookie</code> before it is called. Returns a page content (string) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>mixed frontPage(string $data)</code></dt>
+ <dd>Gets all the threads on Nairaland front page. $data is the content of the page including html. Returns an object of the Read class or a string if $data is empty. The returned object contains Element in a key=value format, which can only be gotten by calling the <code>fetch</code> of the Read class. The Elements will have this keys: ('<b>link</b>' => 'The link to the thread', '<b>title</b>' => 'The title of the thread'). </dd>
+ <dt><code>mixed threads(string $data)</code></dt>
+ <dd>Gets all the thread on a board. $data is the content of the board including html. Returns an object of the Read class or a string if $data is empty.  The returned object contains Element in a key=value format, which can only be gotten by calling the <code>fetch</code> of the Read class. The Elements will have this keys: ('<b>link</b>' => 'The link to the thread', '<b>title</b>' => 'The title of the thread', '<b>author</b>' => 'The creator of the thread', '<b>posts</b>' => 'Number of posts the thread has', '<b>views</b>' => 'Number of views the thread has', '<b>date</b>' => 'date of last post', '<b>lastposter</b>' => 'username of last poster').</dd>
+ <dt><code>mixed readPosts(string $data)</code></dt>
+ <dd>Gets the posts in a thread. $data is the content of the thread including html. Returns an object of the Read class or a string if $data is empty.  The returned object contains Element in a key=value format, which can only be gotten by calling the <code>fetch</code> of the Read class. The Elements will have this keys: ('<b>poster</b>' => 'Username of OP or poster', '<b>date</b>' => 'The date of post', '<b>post</b>' => 'The post itself', '<b>likes</b>' => 'Number of likes for the post', '<b>attachment</b>' => 'The attached files for the post').</dd>
+ <dt><code>mixed createThread(string $title, string $body, string $board [, string $attachment = FALSE])</code></dt>
+ <dd> Creates a thread in the specified Nairaland board. $title is the thread title/name. $body is the content of the thread or the first post, $board is a <a href="#1"><b>Valid Nairaland Board</b></a>, $attachment (optional) the path to the file you want to attach (e.g 'path/to/file.txt'). Returns a page content (string) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>mixed get(string $url)</code></dt>
+ <dd>Sends data to a url using the GET method. $url is required and must be in the format 'http://www.nairaland.com/page?key=value'. The key=value part of the url is optional. Returns the content page (string) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>bool setCookie(string $cookie)</code></dt>
+ <dd>Sets the cookie that will be used for requests. $cookie must contain a complete netscape cookie file contents generated by curl. Returns TRUE (bool) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code></dd>
+ <dt><code>mixed getCookie()</code></dt>
+ <dd>Returns FALSE (bool) on error or the cookie (string). The cookie returned is the contents of a netscape cookie file. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>array extractCookies(string $cookie)</code></dt>
+ <dd>$cookie should contain the contents of a netscape cookie file generated by curl. Returns a multidimensional array. The key of the first array is a counter variable, while the second array has the following keys: ('domain', 'flag', 'path', 'secure', 'expiration', 'name', 'value').</dd>
+ <dt><code>string getUsername()</code></dt>
+ <dd>Gets the username.</dd>
+ <dt><code>void setUsername(string $username)</code></dt>
+ <dd>Sets the username</dd>
+ <dt><code>mixed getCookieValue(string $name)</code></dt>
+ <dd>Gets the value of a cookie. $name is the name of the cookie that you want to extract its value. Valid values for $name is 'session' and 'member'. Returns the cookie value (string) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>string getErrorMsg()</code></dt>
+ <dd>Returns a string describing the most recent error.</dd>
+ <dt><code>mixed followBoard(string $board, string $redirect)</code></dt>
+ <dd>Follows a Nairaland Board. $board must be a <a href="#1"><b>Valid Nairaland Board</b></a>, $redirect is the url to redirect to after successfully following a board. This method require a call first to <code>login</code> or <code>setCookie</code> before a call to it. Returns the redirected page content (string) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>mixed unFollowBoard(string $board, string $redirect)</code></dt>
+ <dd>Follows a Nairaland Board. $board must be a <a href="#1"><b>Valid Nairaland Board</b></a>, $redirect is the url to redirect to after successfully following a board. This method require a call first to <code>login</code> or <code>setCookie</code> before a call to it. Returns the redirected page content (string) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>array viewProfile(string $data)</code></dt>
+ <dd>Views the profile of a Nairaland user. $data is the content of the user profile page including html. Returns an array containing two objects of the Read class. The first value in the array has 'threads' as the key and the second value has 'profile' as the key. The first value can be NULL, if the user has no threads. The object has the same Element keys as the one returned by the <code>thread</code> method. The second value cannot be NULL. The object has the following Element keys: ('<b>avatar</b>' => 'The user avatar', '<b>follow</b>' => 'The link to follow a user', '<b>details</b>' => 'The user information', '<b>following</b>' => 'The user following (friends) list')</dd>
+ <dt><code>mixed reportPost(string $postId, string $reason, string $redirect)</code></dt>
+ <dd>Reports a post to the Mods. $postId is the id of the post you want to report, $reason is the reason for reporting and $redirect is the url to redirect to after a successfull report operation. Returns the redirected page contents (string) on success or FALSE on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>mixed reply(string $topic, string $title, string $body [, string $attachment = FALSE] [, string $follow = 'on'])</code></dt>
+ <dd>Replies a thread. $topic is the id of the thread, $title is the thread title, $body is the reply, $attachment (optional) is the path to the file you want to attach (eg 'path/to/file.txt') and $follow (optional) should be either 'on' or 'off' to follow the Thread. Returns the thread content (string) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>mixed likePost(string $postId, string $redirect)</code></dt>
+ <dd>Likes a post on a thread. $postId is the id of the post and $redirect is the url to redirect to after successfully liking the post. Returns the redirected page content (string) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>string getThreadId(string $link)</code></dt>
+ <dd>Gets the id of a thread by its link. Returns id if $link is not empty</dd>
+ <dt><code>mixed followThread(string $ThreadId, string $redirect)</code></dt>
+ <dd>Follows a thread. $ThreadId is the id of the thread to follow and $redirect is the url to redirect to after a successfull follow operation. Returns the redirected page content (string) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>mixed hasNextPage(string $result, int $current)</code></dt>
+ <dd>Used for pagination in threads. Returns FALSE (bool) if there are no more pages or the next page number (int) if there are more pages.</dd>
+ <dt><code>mixed sendEmail(string $recipient, string $subject, string $body)</code></dt>
+ <dd>Sends an email to a user. $recipient is the username of the reciever, $subject is the subject of the email and $body is the message. Returns the content of the user profile (string) on success or FALSE (bool) on error. If FALSE, an error message describing the problem encountered can be accessed using the <code>getErrorMsg()</code> method.</dd>
+ <dt><code>mixed fetch()</code></dt>
+ <dd>This is a method from the Read class. This method should only be called on an Object of the Read class which is returned by <code>frontPage($data)</code>, <code>threads($data)</code> and <code>readPosts($data)</code>. <code>viewProfile($data)</code> returns an array containing two objects of this class. Returns an associative array that correspond to the fetched Elements or FALSE if there are no more Elements and move the internal Element pointer ahead. The returned array has the Element key as its key and the Element value as its value. Each method have different Elements key.</dd>
+<dt id="1">Valid Nairaland Board</dt>
+<dd>'investment', 'technology', 'programming', 'software_programmer_market', 'webmasters', 'web_market', 'computers', 'computer_market', 'phones', 'phone_internet_market', 'graphics_video', 'graphics_video_market', 'technology_market', 'entertainment', 'jokes', 'tv_movies', 'satelite_tv_tech', 'music_radio', 'rap_battles', 'music_business', 'celebrities', 'fashion', 'fashion_clothing_market', 'events', 'sports', 'european_football', 'gaming', 'video_games_and_gadgets_for_sale', 'forum_games', 'literature_writing', 'poems_for_review', 'pictures', 'nairaland_general', 'foreign_affairs', 'ethnic_racial_or_sectarian_politics', 'violent_disgusting_non_celebrity_crimes', 'romance', 'dating_and_meeting_zone', 'business', 'business_to_business', 'adverts', 'jobs_vacancies', 'career', 'certification_and_training_adverts', 'nysc', 'education', 'educational_services', 'autos', 'cartalk', 'properties', 'health', 'travel', 'travel_ads', 'family', 'culture', 'religion', 'islam_for_muslims', 'food', 'nairaland_ads'</dd>
+</dl>
+
+	<div id="LeftMenu">
+		<div class="fieldsetPartners">
+				<span class="legendPartners">Scripts</span>
+<div class="leftmenu">
+<ul>
+<li><a href="http://code.google.com/p/nairaland-api/">Nairaland Api Home</a></li>
+</ul>
+<ul>
+<li><a href="http://code.google.com/p/nairaland-api/source/browse/">Codes</a></li>
+<li><a href="http://www.facebook.com/Elvis.chidera">My Facebook Profile</a></li>
+<li><a href="http://www.nairaland.com">Nairaland</a></li>
+</ul>
+
+</div>
+		</div>
+	</div>
+	
+
+	</div>
+	
+</div>
+<div id="Footer">
+	Elvis Chidera &copy; 2013 Xmx Me | <a href="http://www.xmxme.com/sell.php">My apps</a>
+</div>
+
+</body>
+</html>
